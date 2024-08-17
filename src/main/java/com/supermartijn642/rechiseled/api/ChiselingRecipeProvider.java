@@ -109,7 +109,7 @@ public abstract class ChiselingRecipeProvider implements DataProvider {
      * @return a chiseling recipe builder for the given recipe name
      */
     protected ChiselingRecipeBuilder beginRecipe(String recipeName){
-        return this.recipes.computeIfAbsent(new ResourceLocation(this.modid, recipeName), s -> new ChiselingRecipeBuilder());
+        return this.recipes.computeIfAbsent(ResourceLocation.fromNamespaceAndPath(this.modid, recipeName), s -> new ChiselingRecipeBuilder());
     }
 
     protected ChiselingRecipeBuilder beginRecipe(ResourceLocation recipe){

@@ -42,7 +42,7 @@ public class ChiselItemRenderer implements CustomItemRenderer {
                 MatrixUtil.mulComponentWise(pose.pose(), 0.5f);
             else if(transformType.firstPerson())
                 MatrixUtil.mulComponentWise(pose.pose(), 0.75f);
-            vertexConsumer = ItemRenderer.getCompassFoilBufferDirect(bufferSource, renderType, pose);
+            vertexConsumer = ItemRenderer.getCompassFoilBuffer(bufferSource, renderType, pose);
             poseStack.popPose();
         }else
             vertexConsumer = ItemRenderer.getFoilBufferDirect(bufferSource, renderType, true, stack.hasFoil());

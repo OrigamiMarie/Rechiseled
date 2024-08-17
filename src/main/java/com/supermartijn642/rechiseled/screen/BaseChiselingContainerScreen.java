@@ -24,7 +24,7 @@ import java.util.function.Supplier;
  */
 public class BaseChiselingContainerScreen<T extends BaseChiselingContainer> extends BaseContainerWidget<T> {
 
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("rechiseled", "textures/screen/chiseling_background.png");
+    private static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath("rechiseled", "textures/screen/chiseling_background.png");
 
     /**
      * 0 - 1 block
@@ -97,7 +97,7 @@ public class BaseChiselingContainerScreen<T extends BaseChiselingContainer> exte
                 ItemStack stack = slot.getItem();
 
                 for(ChiselingEntry entry : this.container.currentRecipe.getEntries()){
-                    if((!stack.hasTag() || stack.getTag().isEmpty())
+                    if(stack.getTags().findAny().isEmpty()
                         && ((entry.hasConnectingItem() && stack.getItem() == entry.getConnectingItem())
                         || (entry.hasRegularItem() && stack.getItem() == entry.getRegularItem()))){
                         ScreenUtils.fillRect(context.poseStack(), slot.x, slot.y, 16, 16, 0, 20, 100, 0.5f);

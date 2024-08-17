@@ -10,8 +10,6 @@ import com.supermartijn642.rechiseled.blocks.RechiseledBlockBuilderImpl;
 import com.supermartijn642.rechiseled.blocks.RechiseledBlockTypeImpl;
 import com.supermartijn642.rechiseled.registration.RechiseledRegistrationImpl;
 import net.fabricmc.fabric.api.resource.ModResourcePack;
-import net.fabricmc.fabric.impl.resource.loader.FabricModResourcePack;
-import net.fabricmc.fabric.impl.resource.loader.GroupResourcePack;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
@@ -46,7 +44,7 @@ public class RegistrationTagsGenerator extends TagGenerator {
     static{
         Field packsField;
         try{
-            packsField = GroupResourcePack.class.getDeclaredField("packs");
+            packsField = ModResourcePack.class.getDeclaredField("packs");
             packsField.setAccessible(true);
         }catch(NoSuchFieldException e){
             throw new RuntimeException(e);
@@ -63,7 +61,7 @@ public class RegistrationTagsGenerator extends TagGenerator {
         });
         ALL_DATA_PACKS = packs.stream()
             .flatMap(pack -> {
-                if(pack instanceof FabricModResourcePack){
+                if(pack instanceof ModResourcePack){
                     try{
                         //noinspection unchecked
                         return ((List<? extends PackResources>)packsField.get(pack)).stream();
@@ -135,7 +133,7 @@ public class RegistrationTagsGenerator extends TagGenerator {
 
         List<Block> blocks = new ArrayList<>();
 
-        ResourceLocation tagLocation = new ResourceLocation(location.getNamespace(), "tags/blocks/" + location.getPath() + ".json");
+        ResourceLocation tagLocation = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "tags/blocks/" + location.getPath() + ".json");
         for(Resource resource : this.resources.getResourceStack(tagLocation)){
             try(InputStream stream = resource.open()){
                 JsonObject json = GSON.fromJson(new InputStreamReader(stream), JsonObject.class);
@@ -143,10 +141,10 @@ public class RegistrationTagsGenerator extends TagGenerator {
                 for(JsonElement element : array){
                     String name = element.getAsString();
                     if(name.charAt(0) == '#'){
-                        blocks.addAll(this.loadVanillaTag(new ResourceLocation(name.substring(1))));
+                        blocks.addAll(this.loadVanillaTag(ResourceLocation.parse(name.substring(1))));
                         continue;
                     }
-                    ResourceLocation registryName = new ResourceLocation(name);
+                    ResourceLocation registryName = ResourceLocation.parse(name);
                     Block block = Registries.BLOCKS.getValue(registryName);
                     if(block == null)
                         throw new JsonParseException("Unknown block '" + registryName + "' in '" + location + "'");

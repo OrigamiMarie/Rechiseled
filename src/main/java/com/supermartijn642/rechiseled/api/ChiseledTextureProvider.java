@@ -84,12 +84,12 @@ public abstract class ChiseledTextureProvider implements DataProvider {
     }
 
     private Pair<BufferedImage,JsonObject> loadTexture(ResourceLocation location){
-        ResourceLocation fullLocation = new ResourceLocation(location.getNamespace(), "textures/" + location.getPath() + ".png");
+        ResourceLocation fullLocation = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "textures/" + location.getPath() + ".png");
         if(!TextureMappingTool.exists(fullLocation))
             throw new IllegalStateException("Could not find existing texture: " + location);
 
         // Get the metadata
-        ResourceLocation metadataLocation = new ResourceLocation(location.getNamespace(), "textures/" + location.getPath() + ".png.mcmeta");
+        ResourceLocation metadataLocation = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), "textures/" + location.getPath() + ".png.mcmeta");
         boolean hasMetadata = TextureMappingTool.exists(metadataLocation);
         JsonObject metadata = null;
         if(hasMetadata){
@@ -135,7 +135,7 @@ public abstract class ChiseledTextureProvider implements DataProvider {
     }
 
     private boolean validateTexture(ResourceLocation texture){
-        ResourceLocation fullLocation = new ResourceLocation(texture.getNamespace(), "textures/" + texture.getPath() + ".png");
+        ResourceLocation fullLocation = ResourceLocation.fromNamespaceAndPath(texture.getNamespace(), "textures/" + texture.getPath() + ".png");
         return TextureMappingTool.exists(fullLocation);
     }
 
@@ -188,10 +188,10 @@ public abstract class ChiseledTextureProvider implements DataProvider {
         if(!ChiseledTextureProvider.this.outputLocations.add(outputLocation))
             throw new IllegalStateException("Two or more textures have the same output location: " + outputLocation);
 
-        PaletteMap paletteMap = this.createPaletteMap(new ResourceLocation("minecraft", "block/oak_planks"), plankTexture);
+        PaletteMap paletteMap = this.createPaletteMap(ResourceLocation.fromNamespaceAndPath("minecraft", "block/oak_planks"), plankTexture);
 
         for(String suffix : this.oakPlankSuffixes){
-            paletteMap.applyToTexture(new ResourceLocation("rechiseled", "block/oak_planks" + suffix), outputLocation + suffix);
+            paletteMap.applyToTexture(ResourceLocation.fromNamespaceAndPath("rechiseled", "block/oak_planks" + suffix), outputLocation + suffix);
         }
     }
 
